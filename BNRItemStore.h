@@ -12,9 +12,13 @@
 
 @interface BNRItemStore : NSObject
 
+-(void)moveItemAtIndex:(NSUInteger)fromIndex
+               toIndex:(NSUInteger)toIndex;
+
 @property (nonatomic, readonly)NSArray *allItems;
 
 +(instancetype)sharedStore;
 -(BNRItem *)createItem;
+-(void)removeItem:(BNRItem *)item;
 
 @end

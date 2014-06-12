@@ -7,8 +7,10 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="BNRDetailViewController">
             <connections>
                 <outlet property="dateLabel" destination="GOD-QE-WFm" id="W3A-S0-Kbo"/>
+                <outlet property="imageView" destination="VSW-9h-Civ" id="POR-dw-NIL"/>
                 <outlet property="nameField" destination="MTc-DO-GNr" id="dw7-aH-JqU"/>
                 <outlet property="serialNumberField" destination="END-Zj-Myk" id="xGB-FR-jpB"/>
+                <outlet property="toolbar" destination="gtc-s8-uJU" id="qLP-39-zjL"/>
                 <outlet property="valueField" destination="XWO-iE-cdD" id="afM-Ev-Ff4"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
@@ -26,7 +28,7 @@
                     <nil key="highlightedColor"/>
                 </label>
                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GOD-QE-WFm">
-                    <rect key="frame" x="43" y="263" width="237" height="21"/>
+                    <rect key="frame" x="42" y="235" width="237" height="21"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
@@ -71,6 +73,21 @@
                         <outlet property="delegate" destination="-1" id="imw-zS-BOH"/>
                     </connections>
                 </textField>
+                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="VSW-9h-Civ">
+                    <rect key="frame" x="42" y="264" width="238" height="155"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                </imageView>
+                <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="gtc-s8-uJU">
+                    <rect key="frame" x="-11" y="432" width="318" height="44"/>
+                    <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                    <items>
+                        <barButtonItem systemItem="camera" id="ziY-V3-ARb">
+                            <connections>
+                                <action selector="takePicture:" destination="-1" id="sEW-Jc-uO1"/>
+                            </connections>
+                        </barButtonItem>
+                    </items>
+                </toolbar>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
             <simulatedStatusBarMetrics key="simulatedStatusBarMetrics"/>

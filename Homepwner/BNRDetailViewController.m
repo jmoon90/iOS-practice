@@ -9,8 +9,10 @@
 #import "BNRDetailViewController.h"
 #import "BNRItem.h"
 #import "BNRItemStore.h"
+#import "BNRImageStore.h"
 
-@interface BNRDetailViewController () <UINavigationControllerDelegate, UIImagePickerControllerDelegate>
+@interface BNRDetailViewController () <UINavigationControllerDelegate, UIImagePickerControllerDelegate, UITextFieldDelegate>
+
 @property (weak, nonatomic) IBOutlet UITextField *nameField;
 @property (weak, nonatomic) IBOutlet UITextField *serialNumberField;
 @property (weak, nonatomic) IBOutlet UITextField *valueField;
@@ -21,6 +23,16 @@
 @end
 
 @implementation BNRDetailViewController
+- (IBAction)backgroundTapped:(id)sender {
+    [self.view endEditing:YES];
+}
+
+-(BOOL)textFieldShouldREturn:(UITextField *)textField {
+    [textField resignFirstResponder];
+    return YES;
+}
+
+
 - (IBAction)takePicture:(id)sender {
     UIImagePickerController *imagePicker = [[UIImagePickerController alloc] init];
     
@@ -40,6 +52,9 @@
 -(void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info {
     //Get picked image from info dictionary
     UIImage *image = info[UIImagePickerControllerOriginalImage];
+    
+    //Store the image in BNRImageStore for this key
+    [[BNRImageStore sharedStore] setImage:image forKey:self.item.itemKey];
     
     //Put that image onto the screen in our image view
     self.imageView.image = image;
@@ -77,6 +92,14 @@
     
     //Use filtered NSDate object to set DateLabel contents
     self.dateLabel.text = [dateFormatter stringFromDate:item.dateCreated];
+    
+    NSString *imageKey = self.item.itemKey;
+    
+    //Get the image from the image key from the image store
+    UIImage *imageToDisplay = [[BNRImageStore sharedStore] imageForKey:imageKey];
+    
+    //Use that image to display it in the imageView
+    self.imageView.image = imageToDisplay;
 }
 
 -(void)viewWillDisappear:(BOOL)animated  {

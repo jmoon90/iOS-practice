@@ -25,6 +25,12 @@
 @implementation BNRDetailViewController
 - (IBAction)backgroundTapped:(id)sender {
     [self.view endEditing:YES];
+    
+    for(UIView *subview in self.view.subviews) {
+        if ([subview hasAmbiguousLayout]) {
+            [subview exerciseAmbiguityInLayout];
+        }
+    }
 }
 
 -(BOOL)textFieldShouldREturn:(UITextField *)textField {
@@ -114,6 +120,14 @@
     item.serialNumber = self.serialNumberField.text;
     item.valueInDollars = [self.valueField.text intValue];
     
+}
+
+-(void)viewDidLayoutSubviews {
+    for (UIView *subview in self.view.subviews) {
+        if([subview hasAmbiguousLayout]) {
+            NSLog(@"Ambiguous: %@", subview);
+        }
+    }
 }
 
 @end

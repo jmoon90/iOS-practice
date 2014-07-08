@@ -23,6 +23,29 @@
 @end
 
 @implementation BNRDetailViewController
+
+-(instancetype)initForNewItem:(BOOL)isNew {
+    self = [super initWithNibName:nil bundle:nil];
+    
+    if(self) {
+        if(isNew) {
+            UIBarButtonItem *doneItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(save:)];
+            
+            self.navigationItem.rightBarButtonItem = doneItem;
+            
+            UIBarButtonItem *cancelItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancel:)];
+            
+            self.navigationItem.leftBarButtonItem = cancelItem;
+        }
+    }
+    return self;
+}
+
+-(instancetype)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
+    @throw [NSException exceptionWithName:@"Wrong initializer" reason:@"Use initForNewItem" userInfo:nil];
+    return nil;
+}
+
 - (IBAction)backgroundTapped:(id)sender {
     [self.view endEditing:YES];
     
@@ -38,7 +61,6 @@
     return YES;
 }
 
-
 - (IBAction)takePicture:(id)sender {
     UIImagePickerController *imagePicker = [[UIImagePickerController alloc] init];
     
@@ -53,6 +75,17 @@
     
     //Place image picker on the screen
     [self presentViewController:imagePicker animated:YES completion:nil];
+}
+
+-(void)cancel:(id)sender {
+    //IF the user cancelled, then remove the BNRItem from the store
+    [[BNRItemStore sharedStore] removeItem:self.item];
+    
+    [self.presentingViewController dismissViewControllerAnimated:YES completion:self.dismissBlock];
+}
+
+-(void)save:(id)sender {
+    [self.presentingViewController dismissViewControllerAnimated:YES completion:self.dismissBlock];
 }
 
 -(void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info {
@@ -128,6 +161,24 @@
             NSLog(@"Ambiguous: %@", subview);
         }
     }
+}
+
+-(void)viewDidLoad {
+    [super viewDidLoad];
+    
+    UIImageView *iv = [[UIImageView alloc] initWithImage:nil];
+    
+    //The contentMode of the image view in the XIB was content fit
+    iv.contentMode = UIViewContentModeScaleAspectFit;
+    
+    //DO not produce a translated contraint for this view
+    iv.translatesAutoresizingMaskIntoConstraints = NO;
+    
+    //The image view was a subview of the view
+    [self.view addSubview:iv];
+    
+    //The image view was pointed to by the imageView property
+    self.imageView = iv;
 }
 
 @end

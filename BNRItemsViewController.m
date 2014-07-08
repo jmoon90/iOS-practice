@@ -17,6 +17,24 @@
 
 @implementation BNRItemsViewController
 
+-(IBAction)addNewItem:(id)sender {
+    //Create a new BNRItem and add it to the store
+    BNRItem *newItem = [[BNRItemStore sharedStore] createItem];
+    BNRDetailViewController *detailViewController = [[BNRDetailViewController alloc] initForNewItem:YES];
+    
+    detailViewController.item = newItem;
+    
+    detailViewController.dismissBlock = ^{
+        [self.tableView reloadData];
+    };
+    
+    UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:detailViewController];
+    
+    navController.modalPresentationStyle = UIModalPresentationFormSheet;
+    
+    [self presentViewController:navController animated:YES completion:nil];
+}
+
 -(void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
@@ -24,7 +42,7 @@
 }
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    BNRDetailViewController *detailViewController = [[BNRDetailViewController alloc] init];
+    BNRDetailViewController *detailViewController = [[BNRDetailViewController alloc] initForNewItem:NO];
     
     NSArray *items = [[BNRItemStore sharedStore] allItems];
     BNRItem *selectedItem = items[indexPath.row];
@@ -34,19 +52,6 @@
     
     //Push it to the top of the navigation controller's stack
     [self.navigationController pushViewController:detailViewController animated:YES];
-}
-
-
--(IBAction)addNewItem:(id)sender
-{
-    //Create a new BNRItem and add it to the store
-    BNRItem *newItem = [[BNRItemStore sharedStore] createItem];
-    NSInteger lastRow = [[[BNRItemStore sharedStore] allItems] indexOfObject:newItem];
-
-    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:lastRow inSection:0];
-    //insert this new row
-    [self.tableView insertRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationTop];
-    
 }
 
 -(void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
@@ -68,6 +73,16 @@
 {
     [[BNRItemStore sharedStore] moveItemAtIndex:sourceIndexPath.row
                                         toIndex:destinationIndexPath.row];
+}
+
+//Overrdie viewDidLoad to tell the table view which kind of cell it should instantiate if there are no cells in the reuse pool
+-(void)viewDidLoad
+{
+    [super viewDidLoad];
+    
+    [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:@"UITableViewCell"];
+    
+    //Manually set HeaderView.xib
 }
 
 -(instancetype)init
@@ -114,15 +129,4 @@
     
     return cell;
 }
-
-//Overrdie viewDidLoad to tell the table view which kind of cell it should instantiate if there are no cells in the reuse pool
--(void)viewDidLoad
-{
-    [super viewDidLoad];
-    
-    [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:@"UITableViewCell"];
-    
-    //Manually set HeaderView.xib
-}
-
 @end
